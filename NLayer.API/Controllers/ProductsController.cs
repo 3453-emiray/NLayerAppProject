@@ -27,7 +27,7 @@ namespace NLayer.API.Controllers
         [HttpGet("[action]")]
         public async Task<IActionResult> GetProductsWithCategory()
         {
-            return CreateActionResult(await _service.GetProductsWitCategory());
+            return CreateActionResult(await _service.GetProductsWithCategory());
         }
 
         [HttpGet] /// GET api/products
@@ -54,9 +54,9 @@ namespace NLayer.API.Controllers
             return CreateActionResult(CustomResponseDto<ProductDto>.Success(201, productsDto));
         }
         [HttpPut]
-        public async Task<IActionResult> Update(ProductUpdateDto productUpdateDto) // productupdate dto yerine product yazılmıştı ve buyuzden pud schemasta görünmedi ve put işleminde created date göründü sonra düzelttim
+        public async Task<IActionResult> Update(ProductUpdateDto productDto) // productupdate dto yerine product yazılmıştı ve buyuzden pud schemasta görünmedi ve put işleminde created date göründü sonra düzelttim
         {
-            await _service.UpdateAsync(_mapper.Map<Product>(productUpdateDto));            
+            await _service.UpdateAsync(_mapper.Map<Product>(productDto));            
             return CreateActionResult(CustomResponseDto<NoContentDto>.Success(204));
         }
         [HttpDelete("{id}")] /// DELETE api/products/5

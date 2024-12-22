@@ -6,13 +6,8 @@ using NLayer.Core.Models;
 using NLayer.Core.Repositories;
 using NLayer.Core.Services;
 using NLayer.Core.UnitOfWorks;
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace NLayer.Caching
 {
@@ -30,11 +25,11 @@ namespace NLayer.Caching
             _repository = repository;
             _unitOfWork = unitOfWork;
 
-            if(_memoryCache.TryGetValue(CacheProductKey, out _))
+            if (_memoryCache.TryGetValue(CacheProductKey, out _))
             {
                 _memoryCache.Set(CacheProductKey, _repository.GetProductsWitCategory().Result);
             }
-        }     
+        }
 
         public async Task<Product> AddAsync(Product entity)
         {
@@ -60,7 +55,7 @@ namespace NLayer.Caching
         public Task<IEnumerable<Product>> GetAllAsync()
         {
             var products = _memoryCache.Get<IEnumerable<Product>>(CacheProductKey);
-            return Task.FromResult(products);            
+            return Task.FromResult(products);
         }
 
         public Task<Product> GetByIdAsync(int id)
@@ -75,13 +70,14 @@ namespace NLayer.Caching
             return Task.FromResult(product);
         }
 
-        public  Task<CustomResponseDto<List<ProductWithCategoryDto>>> GetProductsWitCategory()
+        public Task<CustomResponseDto<List<ProductWithCategoryDto>>>GetProductsWithCategory()
         {
             var products = _memoryCache.Get<IEnumerable<Product>>(CacheProductKey);
-            var productsWithCategoryDto = _mapper.Map<List<ProductWithCategoryDto>>(products);
-            return Task.FromResult(CustomResponseDto<List<ProductWithCategoryDto>>.Success(200, productsWithCategoryDto));
-        } 
-
+            var productsWithCategoryDto = _mapper.Map<List<ProductWithCategoryDto>>(products);            
+            return Task.FromResult(CustomResponseDto<List<ProductWithCategoryDto>>.Success(200,productsWithCategoryDto));
+        }        
+        
+        
         public async Task RemoveAsync(Product entity)
         {
             _repository.Remove(entity);
@@ -105,8 +101,8 @@ namespace NLayer.Caching
 
         public IQueryable<Product> Where(Expression<Func<Product, bool>> expression)
         {
-            return _memoryCache.Get<List<Product>>(CacheProductKey).Where(expression.Compile()).AsQueryable();            
-        } 
+            return _memoryCache.Get<List<Product>>(CacheProductKey).Where(expression.Compile()).AsQueryable();
+        }
 
 
         public async Task CacheAllProductsAsync()

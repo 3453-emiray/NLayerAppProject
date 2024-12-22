@@ -1,12 +1,6 @@
-﻿using NLayer.Core.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using NLayer.Core.Models;
 using NLayer.Core.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NLayer.Core;
-using Microsoft.EntityFrameworkCore;
 
 namespace NLayer.Repository.Repositories
 {
@@ -18,7 +12,7 @@ namespace NLayer.Repository.Repositories
 
         public async Task<Category> GetSingleCategoryByIdWithProductsAsync(int categoryId)
         {
-            return await _context.Categories.Include(x=>x.Products).Where(x=>x.Id==categoryId).SingleOrDefaultAsync();
+            return await _context.Categories.Include(x => x.Products).Where(x => x.Id == categoryId).SingleOrDefaultAsync();
         }
     }
 }

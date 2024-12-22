@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using NLayer.Core.Repositories;
-using NLayer.Core.UnitOfWorks;
 using NLayer.Core.Services;
-using NLayer.Service.Services;
+using NLayer.Core.UnitOfWorks;
 using NLayer.Service.Exceptions;
+using System.Linq.Expressions;
 
 
 namespace NLayer.Service.Services
@@ -18,14 +12,14 @@ namespace NLayer.Service.Services
     {
         private readonly IGenericRepository<T> _repository;
         private readonly IUnitOfWork _unitOfWork;
-        
+
         public Service(IGenericRepository<T> repository, IUnitOfWork unitOfWork)
         {
             _repository = repository;
             _unitOfWork = unitOfWork;
         }
 
-        
+
         public async Task<T> AddAsync(T entity)
         {
             await _repository.AddAsync(entity);
@@ -52,7 +46,7 @@ namespace NLayer.Service.Services
         {
             var hasProduct = await _repository.GetByIdAsync(id);
 
-            if(hasProduct == null)
+            if (hasProduct == null)
             {
                 throw new NotFoundException($"{typeof(T).Name}({id}) not found");
             }
@@ -68,7 +62,7 @@ namespace NLayer.Service.Services
             _repository.RemoveRange(entities);
             await _unitOfWork.CommitAsync();
         }
-        public async Task UpdateAsync (T entity)
+        public async Task UpdateAsync(T entity)
         {
             _repository.Update(entity);
             await _unitOfWork.CommitAsync();
